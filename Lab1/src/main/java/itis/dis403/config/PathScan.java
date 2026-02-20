@@ -1,46 +1,34 @@
 package itis.dis403.config;
 
-import itis.dis403.annotation.Component;
-
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PathScan {
-
     public static List<Class<?>> find(String scannedPackage) {
-        String scannedPath = scannedPackage.replace(".", "/");
-        URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
-        if (scannedUrl == null) {
-            throw new IllegalArgumentException("Bad package " + scannedPackage);
-        }
-        File scannedDir = new File(scannedUrl.getFile());
         List<Class<?>> classes = new ArrayList<>();
-        for (File file : scannedDir.listFiles()) {
-            classes.addAll(find(file, scannedPackage));
+        String path = scannedPackage.replace('.', '/');
+        URL url = Thread.currentThread().getContextClassLoader().getResource(path);
+
+        if (url != null) {
+            File directory = new File(url.getFile());
+            scanDirectory(directory, scannedPackage, classes);
         }
         return classes;
     }
 
-    private static List<Class<?>> find(File file, String scannedPackage) {
-        List<Class<?>> classes = new ArrayList<>();
-        String resource = scannedPackage + "." + file.getName();
-        if (file.isDirectory()) {
-            for (File child : file.listFiles()) {
-                classes.addAll(find(child, resource));
-            }
-        } else if (resource.endsWith(".class")) {
-            String className = resource.substring(0, resource.length() - 6);
-            try {
-                Class clazz = Class.forName(className);
-                if (clazz.isAnnotationPresent(Component.class)) {
-                    classes.add(clazz);
-                }
-            } catch (ClassNotFoundException ignore) {
+    private static void scanDirectory(File dir, String packageName, List<Class<?>> classes) {
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                scanDirectory(file, packageName + "." + file.getName(), classes);
+            } else if (file.getName().endsWith(".class")) {
+                String className = packageName + "." +
+                        file.getName().substring(0, file.getName().length() - 6);
+                try {
+                    classes.add(Class.forName(className));
+                } catch (ClassNotFoundException ignore) {}
             }
         }
-        return classes;
     }
 }

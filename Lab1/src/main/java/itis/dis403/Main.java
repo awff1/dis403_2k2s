@@ -5,9 +5,24 @@ import itis.dis403.config.Context;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("=== Запуск контекста ===");
+
+        // Создаем контекст
         Context context = new Context();
 
-        Application application = (Application) context.getComponent(Application.class);
-        application.run();
+        // Получаем Application из контекста
+        Application app = (Application) context.getBean(Application.class);
+
+        if (app != null) {
+            System.out.println("✓ Application найден, запускаем...\n");
+            app.run();
+        } else {
+            System.out.println("✗ Application не найден!");
+        }
+
+        // Выводим все маппинги
+        context.printMappings();
+
+        System.out.println("\n=== Готово ===");
     }
 }

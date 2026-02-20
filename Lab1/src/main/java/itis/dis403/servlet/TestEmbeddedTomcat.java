@@ -1,72 +1,50 @@
 package itis.dis403.servlet;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 public class TestEmbeddedTomcat {
     public static void main(String[] args) {
         Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir("temp");
+
         Connector conn = new Connector();
         conn.setPort(8090);
         tomcat.setConnector(conn);
 
         String contextPath = "";
 
-        String docBase = new File(".").getAbsolutePath();
+        // Используем временную директорию для docBase
+        String docBase = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath();
         Context tomcatContext = tomcat.addContext(contextPath, docBase);
 
-        /*
-            Создаем сервлет, лучше разместить этот код в отдельном файле
-         */
+        // Создаем экземпляр DispatcherServlet
+        HttpServlet dispatcherServlet = new DispatcherServlet();
 
-        HttpServlet servlet = new HttpServlet() {
-            @Override
-            protected void service(HttpServletRequest req, HttpServletResponse resp)
-                    throws ServletException, IOException {
-                resp.setContentType("text/html; charset=utf-8");
-                PrintWriter writer = resp.getWriter();
-                writer.println("<html><head><meta charset='utf-8'/><title>Embeded Tomcat</title></head><body>");
-                writer.println("<h1>Мы встроили Tomcat в свое приложение!</h1>");
+        // Добавляем сервлет
+        String servletName = "dispatcherServlet";
+        tomcat.addServlet(contextPath, servletName, dispatcherServlet);
 
-                writer.println("<div>Метод: " + req.getMethod() + "</div>");
-                writer.println("<div>Ресурс: " + req.getPathInfo() + "</div>");
-                writer.println("</body></html>");
-            }
-        };
-
-
-        /*
-            Динамически подключаем севлет
-         */
-        String servletName = "dispatcherServlet"; // любое уникальное имя
-        tomcat.addServlet(contextPath, servletName, servlet);
-        //tomcat.addServlet(contextPath, servletName, new DispatcherServlet());
-        // Указываем имя ресурса и сервлет, который этот ресурс будет обрабатывать
-        // (по пути "/*" наш сервлет будет перехватывать все запросы)
+        // Маппинг на все запросы
         tomcatContext.addServletMappingDecoded("/*", servletName);
 
         try {
             tomcat.start();
+            System.out.println("==========================================");
+            System.out.println("Сервер запущен на http://localhost:8090/");
+            System.out.println("Доступные страницы:");
+            System.out.println("  - http://localhost:8090/home");
+            System.out.println("  - http://localhost:8090/index");
+            System.out.println("  - http://localhost:8090/about");
+            System.out.println("==========================================");
             tomcat.getServer().await();
-
-            /*
-                tomcat.stop()
-                tomcat.destroy()
-             */
         } catch (LifecycleException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
