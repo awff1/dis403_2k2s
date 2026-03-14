@@ -13,6 +13,7 @@ import static jakarta.persistence.InheritanceType.*;
 public class Person {
 
     @Id
+    @GeneratedValue
     protected Long id;
 
     protected String name;
@@ -53,6 +54,18 @@ public class Person {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        try {
+            if (phone != null) {
+                String number = phone.getNumber();
+                return number != null ? number : "номер пуст";
+            }
+            return "телефон отсутствует";
+        } catch (Exception e) {
+            return "ошибка загрузки";
+        }
     }
 
     @Override

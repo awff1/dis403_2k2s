@@ -1,20 +1,28 @@
 package dis403.itis.lab4.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
 public class Phone {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "phone_number")
     private String number;
+
+
+    public Phone() {
+    }
+
+
+    public Phone(String number) {
+        this.number = number;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

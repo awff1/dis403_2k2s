@@ -10,10 +10,11 @@
     <h2>Главная страница</h2>
 
     <div>
-        <#list phones as phone>
+        <#list persons as person>
         <div>
-            <span id="phone${phone.id}">${phone.id}</span>
-            <span>${phone.number}</span>
+            <span>${person.id}</span>
+            <span>${person.name}</span>
+            <span>${person.phoneNumber}</span>
         </div>
         </#list>
 
