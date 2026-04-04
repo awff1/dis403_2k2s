@@ -18,17 +18,17 @@ public class BookingPersonViewService {
 
     public List<BookingPersonViewDto> findByHotelId(Long hotelId) {
         return bookingPersonViewRepository.findByHotelId(hotelId).stream()
-                .map(b ->
-                    BookingPersonViewDto.builder()
-                        .id(b.getId())
-                        .arrivaldate(b.getArrivaldate())
-                        .stayingdate(b.getStayingdate())
-                            .room(b.getRoom())
-                            .name(b.getName())
-                            .birthdate(b.getBirthdate())
-                            .hotelId(b.getHotelId())
-                            .gender(b.getGender())
-                            .build()
-                ).toList();
+                .map(b -> {
+                    BookingPersonViewDto dto = new BookingPersonViewDto();
+                    dto.setId(b.getId());
+                    dto.setArrivaldate(b.getArrivaldate());
+                    dto.setStayingdate(b.getStayingdate());
+                    dto.setRoom(b.getRoom());
+                    dto.setName(b.getName());
+                    dto.setBirthdate(b.getBirthdate());
+                    dto.setHotelId(b.getHotelId());
+                    dto.setGender(b.getGender());
+                    return dto;
+                }).toList();
     }
 }

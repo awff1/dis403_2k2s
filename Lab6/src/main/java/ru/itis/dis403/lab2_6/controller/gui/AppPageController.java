@@ -1,5 +1,6 @@
 package ru.itis.dis403.lab2_6.controller.gui;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,6 +54,7 @@ public class AppPageController {
         System.out.println("token " + token);
 
         model.addAttribute("jwt_token", token);
+        model.addAttribute("username", request.getUsername());
 
         return "app";
     }

@@ -4,7 +4,7 @@ import lombok.Builder;
 
 import java.util.Date;
 
-@Builder
+
 public class BookingDto {
     private Long id;
     private Date arrivaldate;
