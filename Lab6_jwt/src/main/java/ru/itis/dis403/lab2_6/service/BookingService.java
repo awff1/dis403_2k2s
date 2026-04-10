@@ -18,14 +18,13 @@ public class BookingService {
     public BookingDto getBookingById(Long bookingId, User user) {
         Booking b = bookingRepository.findByIdAndHotelId(bookingId, user.getHotel().getId());
 
-        BookingDto dto = new BookingDto();
-        dto.setId(b.getId());
-        dto.setArrivaldate(b.getArrivaldate());
-        dto.setStayingdate(b.getStayingdate());
-        dto.setDeparturedate(b.getDeparturedate());
-        dto.setPersonId(b.getPerson().getId());
-        dto.setName(b.getPerson().getName());
-
-        return dto;
+        return BookingDto.builder()
+                .id(b.getId())
+                .arrivaldate(b.getArrivaldate())
+                .stayingdate(b.getStayingdate())
+                .departuredate(b.getDeparturedate())
+                .personId(b.getPerson().getId())
+                .name(b.getPerson().getName())
+                .build();
     }
 }

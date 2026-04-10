@@ -34,9 +34,9 @@ public class ApplicationConfig {
     @Bean
     public HikariConfig hikariConfig() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/lab6");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/lab2_6");
         config.setUsername("postgres");
-        config.setPassword("admin");
+        config.setPassword("post");
         config.setDriverClassName("org.postgresql.Driver");
         return config;
     }

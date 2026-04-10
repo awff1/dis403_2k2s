@@ -45,8 +45,8 @@
         .then(json => {
             let token = json.token;
             jwt_token = token;
-            localStorage.setItem('jwt_token', token);
-            window.location = '/app';
+            //localStorage.setItem('jwt_token', token);
+            //window.location = '/app';
             document.getElementById("login_section").style.display="none";
             document.getElementById("content_section").style.display="block";
 
