@@ -32,18 +32,18 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<BookingDto> getBookingById(@PathVariable Long id) {
-
-        UserDetailImpl userDetails =
-                (UserDetailImpl) SecurityContextHolder.getContext()
-                        .getAuthentication().getPrincipal();
-
-        System.out.println(userDetails.getUser());
-        BookingDto booking = bookingService.getBookingById(id, userDetails.getUser());
-        System.out.println(booking);
-        return ResponseEntity.ok(booking);
-    }
+//    @GetMapping("/get/{id}")
+//    public ResponseEntity<BookingDto> getBookingById(@PathVariable Long id) {
+//
+//        UserDetailImpl userDetails =
+//                (UserDetailImpl) SecurityContextHolder.getContext()
+//                        .getAuthentication().getPrincipal();
+//
+//        System.out.println(userDetails.getUser());
+//        BookingDto booking = bookingService.getBookingById(id, userDetails.getUser());
+//        System.out.println(booking);
+//        return ResponseEntity.ok(booking);
+//    }
 
     @GetMapping("/all")
     public ResponseEntity<BookingsResponse> getBookings() {
@@ -59,4 +59,25 @@ public class BookingController {
 
         return ResponseEntity.ok(new BookingsResponse(bookings));
     }
+
+
+//    @PostMapping("/update/{id}")
+//    @ResponseBody
+//    public ResponseEntity<?> updateBooking(@PathVariable Long id, @RequestBody BookingDto dto) {
+//        // 1. Ищем бронирование в базе
+//        // Если у тебя в контроллере есть доступ к репозиторию:
+//        Booking booking = bookingRepository.findById(id).orElse(null);
+//
+//        if (booking != null) {
+//            // 2. Обновляем поля из dto (те, что ты разрешил менять)
+//            booking.setArrivaldate(dto.getArrivaldate());
+//            booking.setStayingdate(dto.getStayingdate());
+//
+//            // 3. Сохраняем в БД
+//            bookingRepository.save(booking);
+//            return ResponseEntity.ok("{\"status\":\"saved\"}");
+//        }
+//
+//        return ResponseEntity.status(404).build();
+//    }
 }

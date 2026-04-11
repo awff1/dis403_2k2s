@@ -1,8 +1,13 @@
 package ru.itis.dis403.lab2_6.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class BookingPersonViewDto {
     private Long id;

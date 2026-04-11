@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Тест</title>
+    <style>
+        #booking_table span {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div id="login_section" style="display:block">
@@ -23,7 +30,24 @@
     </div>
 </div>
 
-<div id="booking_data"></div>
+<div id="edit_section" style="display:none; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
+    <h3>Редактирование бронирования</h3>
+    <form id="edit_form">
+        <input type="hidden" id="edit_id" name="id">
+
+        <div>Дата заезда: <input type="text" id="edit_arrival" name="arrivaldate"></div>
+        <div>Дата рождения: <input type="text" id="edit_birthday" name="birthdate"></div>
+        <div>Гендер: <input type="text" id="edit_gender" name="gender"></div>
+        <div>Номер отеля: <input type="text" id="edit_hotelid" name="hotelId"></div>
+        <div>Имя: <input type="text" id="edit_name" name="name"></div>
+        <div>Комната: <input type="text" id="edit_room" name="room"></div>
+        <div>Дата выезда: <input type="text" id="edit_staying" name="stayingdate"></div>
+
+        <div style="margin-top:10px;">
+            <input type="button" value="Сохранить изменения" onclick="save_booking()"/>
+        </div>
+    </form>
+</div>
 
 <script>
     let jwt_token;
@@ -99,12 +123,60 @@
         })
         .then(response => response.json())
         .then(json => {
+
               fill_booking(json);
         });
     }
 
     function fill_booking(data) {
-        document.getElementById("booking_data").innerHTML = JSON.stringify(data);
+        document.getElementById("edit_section").style.display = "block";
+        console.log("ДАННЫЕ С СЕРВЕРА===================", data);
+        // Заполняем поля значениями
+        document.getElementById("edit_arrival").value = data.arrivaldate;
+        document.getElementById("edit_birthday").value = data.birthdate;
+        document.getElementById("edit_gender").value = data.gender;
+        document.getElementById("edit_hotelid").value = data.hotelId;
+        document.getElementById("edit_name").value = data.name;
+        document.getElementById("edit_room").value = data.room;
+        document.getElementById("edit_staying").value = data.stayingdate;
+
+        document.getElementById("edit_id").value = data.id;
+    }
+
+    function save_booking() {
+        const bookingId = document.getElementById("edit_id").value;
+
+        // Собираем объект так, чтобы имена полей СОВПАДАЛИ с именами в BookingPersopnViewDto.java
+        const data = {
+            id: bookingId,
+            arrivaldate: document.getElementById("edit_arrival").value,
+            birthdate: document.getElementById("edit_birthday").value,
+            gender: document.getElementById("edit_gender").value,
+            hotelId: document.getElementById("edit_hotelid").value,
+            name: document.getElementById("edit_name").value,
+            room: document.getElementById("edit_room").value,
+            stayingdate: document.getElementById("edit_staying").value
+        };
+
+        fetch('http://localhost:8090/api/booking/update/' + bookingId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Bearer ' + jwt_token // Проверь, что jwt_token не пустой
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Сохранено на сервере!");
+                document.getElementById("edit_section").style.display = "none";
+                document.getElementById("booking_table").innerHTML = ""; // Очищаем старую таблицу
+                show_bookings(); // Загружаем обновленный список
+            } else {
+                alert("Ошибка: " + response.status + ". Проверь консоль.");
+            }
+        })
+        .catch(err => console.error("Ошибка запроса:", err));
     }
 </script>
 
