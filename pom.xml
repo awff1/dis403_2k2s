@@ -17,6 +17,7 @@
         <module>Lab5</module>
         <module>Lab7</module>
         <module>Lab6_jwt</module>
+        <module>Lab9_inner_service</module>
     </modules>
 
     <properties>

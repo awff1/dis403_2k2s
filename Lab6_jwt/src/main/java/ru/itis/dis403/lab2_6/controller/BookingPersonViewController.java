@@ -58,12 +58,11 @@ public class BookingPersonViewController {
     @PostMapping("/update/{id}")
     @ResponseBody
     public ResponseEntity<?> updateBooking(@PathVariable Long id, @RequestBody BookingPersonViewDto dto) {
-        // 1. Ищем бронирование в базе
-        // Если у тебя в контроллере есть доступ к репозиторию:
+
         BookingPersonView booking = bookingPersonViewRepository.findById(id).orElse(null);
 
         if (booking != null) {
-            // 2. Обновляем поля из dto (те, что ты разрешил менять)
+
             booking.setArrivaldate(dto.getArrivaldate());
             booking.setBirthdate(dto.getBirthdate());
             booking.setGender(dto.getGender());
@@ -72,7 +71,7 @@ public class BookingPersonViewController {
             booking.setRoom(dto.getRoom());
             booking.setStayingdate(dto.getStayingdate());
 
-            // 3. Сохраняем в БД
+
             bookingPersonViewRepository.save(booking);
             return ResponseEntity.ok("{\"status\":\"saved\"}");
         }
